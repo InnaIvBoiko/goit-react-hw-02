@@ -1,87 +1,62 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Description from '../Description/Description.jsx';
-// import Options from '../Options/Options.jsx';
-// import Feedback from '../Feedback/Feedback.jsx';
+import Options from '../Options/Options.jsx';
+import Feedback from '../Feedback/Feedback.jsx';
 
-import './App.module.css';
+import css from './App.module.css';
 
-export default function App() {
-
-  const [types, setTypes] = useState({
+const getFeedback = () => {
+    const Feedback = localStorage.getItem('FEEDBACK');
+  return Feedback !== null ?
+    JSON.parse(Feedback) :
+    {
     good: 0,
     neutral: 0,
     bad: 0
-  }); 
-
-  const handleClickGood = () => {
-    const countGood = types.good;
-    setTypes({
-      ...types,
-      good: countGood + 1,
-    });
-    return types;
   };
-  const handleClickNeutral = () => {
-    const countNeut = types.neutral;
-    setTypes({
+};
+
+export default function App() {
+
+  const [types, setTypes] = useState(getFeedback);
+
+  const updateFeedback = (feedbackType) => {
+    setTypes(() => ({
       ...types,
-      neutral: countNeut + 1,
-    });
-    return types;
+      [feedbackType]: types[feedbackType] + 1,
+    }));
   };
-
-  const handleClickBad = () => {
-    const countBad = types.bad;
-    setTypes({
-      ...types,
-      bad: countBad + 1,
-    });
-    return types;
-  };
-
-  const handleClickReset = () => {
-
-    setTypes({
+ 
+  const resetFeedback = () => {
+    setTypes(()=>({
       good: 0,
       neutral: 0,
       bad: 0,
-    });
-    return types;
+    }));
   };
+ 
+    const totalFeedback = types.good + types.neutral + types.bad;
+    const [isResetVisible, setIsResetVisible] = useState(() => {
+      totalFeedback === 0;
+    });
 
-  const totalFeedback = types.good + types.neutral + types.bad;
-  const positive = Math.round((types.good / totalFeedback) * 100);
+    useEffect(() => {
+      setIsResetVisible(totalFeedback === 0 ? false : true);
+    }, [totalFeedback]);
+  
+      useEffect(() => {
+        localStorage.setItem('FEEDBACK', JSON.stringify(types));
+    }, [types]);
 
-  // const isVisible = (totalFeedback) => {
-  //   if (totalFeedback === 0) {
-  //     const x = false;
-  //     return x;
-  //   }
-  // };
-
-
-  return (
-    <>
-      <Description />
-      {/* <Options /> */}
-      {/* <Feedback types={types} /> */}
-
-      <div>
-        <button onClick={handleClickGood}> Good</button>
-        <button onClick={handleClickNeutral}> Neutral</button>
-        <button onClick={handleClickBad}> Bad</button>
-        <button onClick={handleClickReset}>Reset</button>
+    return (
+      <div className={css.container} >
+        <Description />
+        <Options update={updateFeedback} reset={resetFeedback} isVisible={isResetVisible} />
+        {
+          isResetVisible ?
+            <Feedback types={types} totalFeedback={totalFeedback} /> :
+            <p>No feedback yet</p>
+        }
       </div>
-    
-      <div>
-        <p>Good: {types.good}</p>
-        <p>Neutral: {types.neutral}</p>
-        <p>Bad: {types.bad}</p>
-        <p>Total: {totalFeedback}</p>
-        <p>Positive: {positive}%</p>
-      </div>
-
-    </>
-  );
-}
-
+    );
+  }

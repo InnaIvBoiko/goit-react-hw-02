@@ -1,0 +1,14 @@
+.options {
+  display: flex;
+  gap: 12px;
+  margin: 24px 0;
+}
+
+.btn {
+  border: 1px solid gray;
+  transition: border 250ms linear;
+}
+
+.btn:hover {
+  border: 1px solid black;
+}

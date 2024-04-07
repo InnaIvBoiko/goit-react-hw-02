@@ -1,12 +1,8 @@
-// import css from './Feedback.module.css';
-
-export default function Feedback({types:
-    good,
+export default function Feedback({types: { good,
     neutral,
-    bad
+    bad, },
+    totalFeedback
 }) {
-
-    const totalFeedback = good + neutral + bad;
     const positive = Math.round((good / totalFeedback) * 100);
 
     return(
@@ -15,7 +11,7 @@ export default function Feedback({types:
             <p>Neutral: {neutral}</p>
             <p>Bad: {bad}</p>
             <p>Total: {totalFeedback}</p>
-            <p>Positive: { positive}%</p>
+            <p>Positive: {positive}%</p>
         </>
     );   
 }
