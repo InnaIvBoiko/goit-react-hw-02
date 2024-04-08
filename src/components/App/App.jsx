@@ -38,13 +38,6 @@ export default function App() {
  
   const totalFeedback = types.good + types.neutral + types.bad;
   const positive = Math.round((types.good / totalFeedback) * 100);
-  const [isResetVisible, setIsResetVisible] = useState(() => {
-    totalFeedback === 0;
-  });
-
-  useEffect(() => {
-    setIsResetVisible(totalFeedback === 0 ? false : true);
-  }, [totalFeedback]);
   
   useEffect(() => {
     localStorage.setItem('FEEDBACK', JSON.stringify(types));
@@ -55,7 +48,7 @@ export default function App() {
       <Description />
       <Options update={updateFeedback} reset={resetFeedback} totalFeedback={totalFeedback} />
       {
-        isResetVisible ?
+         totalFeedback !== 0 ?
           <Feedback types={types} totalFeedback={totalFeedback} positive={positive} /> :
           <Notification />
       }
