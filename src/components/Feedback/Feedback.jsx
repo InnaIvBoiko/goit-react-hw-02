@@ -1,11 +1,10 @@
 export default function Feedback({types: { good,
     neutral,
     bad, },
-    totalFeedback
+    totalFeedback,
+    positive
 }) {
-    const positive = Math.round((good / totalFeedback) * 100);
-
-    return(
+        return(
         <>
             <p>Good: {good}</p>
             <p>Neutral: {neutral}</p>
